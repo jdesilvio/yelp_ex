@@ -11,11 +11,12 @@ defmodule YelpElixir.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :oauth2]]
+    [applications: [:logger, :oauth2, :httpoison]]
   end
 
   defp deps do
     [{:oauth2, "~> 0.8"},
-     {:poison, "~> 3.0"}]
+     {:poison, "~> 3.0"},
+     {:httpoison, "~> 0.10.0"}]
   end
 end
