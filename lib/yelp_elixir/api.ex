@@ -7,7 +7,7 @@ defmodule YelpElixir.API do
   ### Examples
 
   ```
-  # Using the default client
+  # Using envrironment variables
   client = YelpElixir.API.get_token!
 
   # Creating your own client
