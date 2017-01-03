@@ -13,45 +13,24 @@ defmodule YelpElixir.Endpoints.Search do
 
   Inputs:
    * client: In the form of `%OAuth.Client{}`
-   * term: Search term (optional)
+   * params: A map of valid parameters used by the Yelp API
 
-  `get/1` returns the closest businesses.
-  `get/2` returns the closest businesses that match the given search term.
+   *Note:* A location is mandatory. Either by passing
+   the `location` parameter or `latitude` and `longitude`
+   parameters.
   """
-  #TODO Pass params as a keyword list
-  def get(client) do
-    url = @url |> inject_location(@location)
+  def get(client, params) do
+    query = @url <> URI.encode_query(params)
     header = ["Authorization": "#{client.token.token_type} #{client.token.access_token}"]
 
-    HTTPoison.get(url, header)
+    HTTPoison.get(query, header)
   end
 
-  def get!(client) do
-    case get(client) do
+  def get!(client, params) do
+    case get(client, params) do
       {:ok, response} -> response
       {:error, error} -> raise error
     end
-  end
-
-  def get(client, term) do
-    url = (@url <> "?term=#{term}&") |> inject_location(@location)
-    header = ["Authorization": "#{client.token.token_type} #{client.token.access_token}"]
-
-    HTTPoison.get(url, header)
-  end
-
-  def get!(client, term) do
-    case get(client, term) do
-      {:ok, response} -> response
-      {:error, error} -> raise error
-    end
-  end
-
-  defp inject_location(url, location) do
-    lat = Float.to_string(elem(location, 0))
-    long = Float.to_string(elem(location, 1))
-
-    url <> "latitude=#{lat}&longitude=#{long}"
   end
 
 end
