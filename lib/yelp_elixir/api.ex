@@ -40,6 +40,10 @@ defmodule YelpElixir.API do
     ])
   end
 
+  def get_token do
+    :not_implemented
+  end
+
   @doc """
   Gets the Yelp API access token.
 
@@ -69,6 +73,10 @@ defmodule YelpElixir.API do
   Refreshes the Yelp API access token.
   """
   def refresh_token do
+    :not_implemented
+  end
+
+  def request() do
     :not_implemented
   end
 
