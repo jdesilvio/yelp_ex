@@ -76,7 +76,7 @@ defmodule YelpElixir.API do
     :not_implemented
   end
 
-  def request() do
+  def request do
     :not_implemented
   end
 
