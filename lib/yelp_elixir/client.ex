@@ -17,7 +17,7 @@ defmodule YelpElixir.Client do
   the `location` or `latitude` and `longitude`.
   """
   @spec search(%OAuth2.Client{}, Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
-  def search(client, options \\ []) do
+  def search(client, options) do
     endpoint = "businesses/search"
     Base.get(client, endpoint, options)
   end
@@ -26,7 +26,7 @@ defmodule YelpElixir.Client do
   Same as `search/2` but raises `HTTPoison.error` if an error occurs.
   """
   @spec search!(%OAuth2.Client{}, Keyword.t) :: %{}
-  def search!(client, options \\ []) do
+  def search!(client, options) do
     search(client, options)
   end
 

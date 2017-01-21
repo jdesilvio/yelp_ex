@@ -15,7 +15,7 @@ defmodule YelpElixir.Client.Base do
   Issues a GET request.
   """
   @spec get(%OAuth2.Client{}, String.t, Keyword.t) :: {:ok,  OAuth2.Response.t} | {:error, HTTPoison.Error.t}
-  def get(client, endpoint, options \\ []) do
+  def get(client, endpoint, options) do
     headers = [auth: "#{client.token.token_type} #{client.token.access_token}"]
 
     API.request(:get, headers, endpoint, options)
@@ -25,7 +25,7 @@ defmodule YelpElixir.Client.Base do
   Same as `get/3` but raises `HTTPoison.error` if an error occurs.
   """
   @spec get!(%OAuth2.Client{}, String.t, Keyword.t) ::  OAuth2.Response.t
-  def get!(client, endpoint, options \\ []) do
+  def get!(client, endpoint, options) do
     case get(client, endpoint, options) do
       {:ok, response} -> response
       {:error, error} -> raise error
