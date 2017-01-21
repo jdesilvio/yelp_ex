@@ -30,7 +30,8 @@ defmodule YelpElixir.API do
   Create a client with credentials to
   interact with the Yelp API server.
   """
-  def create_client(client_id, client_secret) do
+  @spec create_client(String.t, String.t, Keyword.t) :: OAuth2.Client.t
+  def create_client(client_id, client_secret, options \\ []) do
     client = OAuth2.Client.new([
       strategy: OAuth2.Strategy.ClientCredentials,
       client_id: client_id,
@@ -40,26 +41,22 @@ defmodule YelpElixir.API do
     ])
   end
 
-  def get_token do
-    :not_implemented
-  end
-
   @doc """
   Gets the Yelp API access token.
 
-  `get_token!/0` uses the default @client
+  `get_token/0` uses the default @client
   that was created using environment variables.
 
-  `get_token!/1` takes any %OAuth2.Client{}
+  `get_token/1` takes any %OAuth2.Client{}
   struct as an input. This should be created
   by using `create_client/2`.
 
-  Returns original %OAuth2.Client{} with the
+  Returns new %OAuth2.Client{} with the
   `AccessToken` key added.
   """
-  def get_token!(client \\ @client)
-  def get_token!(client) do
-    OAuth2.Client.get_token!(
+  @spec get_token(OAuth2.Client.t, Keyword.t) :: {:ok, OAuth2.Client.t} | {:error, HTTPoison.Error.t}
+  def get_token(client \\ @client, options \\ []) do
+    OAuth2.Client.get_token(
       client,
       params = [
         grant_type: "client_credentials",
@@ -67,6 +64,18 @@ defmodule YelpElixir.API do
         client_secret: client.client_secret
       ]
     )
+  end
+
+  @doc """
+  Same as `get_token` but raises `HTTPoison.Error` if an error occurs during the
+  request.
+  """
+  @spec get_token!(OAuth2.Client.t, Keyword.t) :: OAuth2.Client.t
+  def get_token!(client \\ @client, options \\ []) do
+    case get_token(client) do
+      {:ok, token} -> token
+      {:error, error} -> raise error
+    end
   end
 
   @doc """
