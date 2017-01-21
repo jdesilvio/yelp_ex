@@ -16,7 +16,10 @@ defmodule YelpElixir.API do
   ```
   """
 
+  use HTTPoison.Base
   alias OAuth2
+
+  @base_url "https://api.yelp.com/v3/"
 
   @client OAuth2.Client.new([
       strategy: OAuth2.Strategy.ClientCredentials,
@@ -85,8 +88,28 @@ defmodule YelpElixir.API do
     :not_implemented
   end
 
-  def request do
-    :not_implemented
+  @doc """
+  Perform an HTTP request.
+  """
+  @spec request(atom, Keyword.t, String.t, Keyword.t) :: {:ok, OAuth2.Response.t} | {:error, HTTPoison.Error.t}
+  def request(method, headers, endpoint, options \\ []) do
+    url = @base_url <> endpoint <> "?"
+
+    {auth, headers} = Keyword.pop(headers, :auth)
+    auth_header = ["Authorization": auth]
+
+    request(method, url, "", auth_header, options)
+  end
+
+  @doc """
+  Same as `request/3` but returns `OAuth2.Response` or raises an error.
+  """
+  @spec request!(atom, Keyword.t, String.t, Keyword.t) :: OAuth2.Response.t
+  def request!(method, headers, endpoint, options \\ []) do
+    case request(method, headers, endpoint, options) do
+      {:ok, response} -> response
+      {:error, error} -> raise error
+    end
   end
 
 end

@@ -4,7 +4,6 @@ defmodule YelpElixir.Client do
   """
 
   alias YelpElixir.Client.Base
-  alias OAuth2
 
   @doc """
   Issues a GET request to the /businesses/search endpoint.
@@ -19,12 +18,12 @@ defmodule YelpElixir.Client do
   """
   @spec search(%OAuth2.Client{}, Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
   def search(client, options \\ []) do
-    url = "https://api.yelp.com/v3/businesses/search?"
-    Base.get(client, url, options)
+    endpoint = "businesses/search"
+    Base.get(client, endpoint, options)
   end
 
   @doc """
-  Same as search/2 but raises `HTTPoison.error` if an error occurs.
+  Same as `search/2` but raises `HTTPoison.error` if an error occurs.
   """
   @spec search!(%OAuth2.Client{}, Keyword.t) :: %{}
   def search!(client, options \\ []) do
