@@ -56,12 +56,9 @@ iex> client = YelpElixir.API.get_token!(client)
 ### [/businesses/search](https://www.yelp.com/developers/documentation/v3/business_search) Endpoint
 
 ```elixir
-iex> opts = %{:latitude => 39.54364, :longitude => -75.145101, :term => "italian", :sort_by => "distance"}
-%{latitude: 39.54364, longitude: -75.145101, sort_by: "distance", term: "italian"}
+iex> options = [params: [sort_by: "distance", longitude: -75.145101, latitude: 39.54364]]
+[params: [sort_by: "distance", longitude: -75.145101, latitude: 39.54364]]
 
-iex> YelpElixir.Client.search(client, opts)
+iex> YelpElixir.Client.search(client, options)
 {:ok, {...your results...}}
-
-iex> YelpElixir.Endpoints.Search.get!(client, opts)
-{...your results...}
 ```
