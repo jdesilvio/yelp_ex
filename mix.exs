@@ -11,7 +11,8 @@ defmodule YelpElixir.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :oauth2, :httpoison]]
+    [applications: [:logger, :oauth2, :httpoison],
+    mod: {YelpElixir, []}]
   end
 
   defp deps do

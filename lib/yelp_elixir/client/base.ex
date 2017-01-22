@@ -11,6 +11,18 @@ defmodule YelpElixir.Client.Base do
 
   alias YelpElixir.API
 
+  use GenServer
+
+  @doc """
+  Starts a supervised GenServer.
+
+  Further options are passed to `GenServer.start_link/1`.
+  """
+  @spec start_link(Keyword.t) :: GenServer.on_start
+  def start_link(options \\ []) do
+    GenServer.start_link(__MODULE__, nil, options)
+  end
+
   @doc """
   Issues a GET request.
   """
@@ -32,5 +44,22 @@ defmodule YelpElixir.Client.Base do
     end
   end
 
+
+  ## Server callbacks
+
+  def init(nil) do
+    case API.get_token do
+      {:ok, token} -> {:ok, token}
+      {:error, error} -> {:stop, error.reason}
+    end
+  end
+
+  #  def handle_call({method, url, body, headers, options}, _from, token) do
+  #    case API.request(method, url, body, headers, [{:auth, token} | options]) do
+  #      {:ok, %HTTPoison.Response{body: body}} -> {:reply, {:ok, body}, token}
+  #      {:ok, response} -> {:reply, {:ok, response}, token}
+  #      {:error, error} -> {:reply, {:error, error}, token}
+  #    end
+  #  end
 
 end
