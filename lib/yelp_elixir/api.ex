@@ -91,20 +91,20 @@ defmodule YelpElixir.API do
   @doc """
   Perform an HTTP request.
   """
-  @spec request(atom, Keyword.t, String.t, Keyword.t) :: {:ok, OAuth2.Response.t} | {:error, HTTPoison.Error.t}
-  def request(method, headers, endpoint, options) do
-    url = @base_url <> endpoint <> "?"
+  #@spec request(atom, Keyword.t, String.t, Keyword.t) :: {:ok, OAuth2.Response.t} | {:error, HTTPoison.Error.t}
+  def request(method, url, body \\ "", headers \\ [], options \\ []) do
+    url = @base_url <> url <> "?"
 
     {auth, headers} = Keyword.pop(headers, :auth)
     auth_header = ["Authorization": auth]
 
-    request(method, url, "", auth_header, options)
+    super(method, url, "", auth_header, options)
   end
 
   @doc """
   Same as `request/3` but returns `OAuth2.Response` or raises an error.
   """
-  @spec request!(atom, Keyword.t, String.t, Keyword.t) :: OAuth2.Response.t
+  #@spec request!(atom, Keyword.t, String.t, Keyword.t) :: OAuth2.Response.t
   def request!(method, headers, endpoint, options) do
     case request(method, headers, endpoint, options) do
       {:ok, response} -> response

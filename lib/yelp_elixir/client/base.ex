@@ -44,9 +44,8 @@ defmodule YelpElixir.Client.Base do
     end
   end
 
-  def get_call(pid, endpoint, options \\ []) do
-    headers = ""
-    GenServer.call(pid, {:get, headers, endpoint, options})
+  def get_call(pid, url, headers \\ [], options \\ []) do
+    GenServer.call(pid, {:get, url, "", headers, options})
   end
 
   ## Server callbacks
@@ -58,9 +57,10 @@ defmodule YelpElixir.Client.Base do
     end
   end
 
-  def handle_call({method, headers, endpoint, options}, _from, client) do
+  def handle_call({method, url, body, headers, options}, _from, client) do
     auth = [auth: "#{client.token.token_type} #{client.token.access_token}"]
-    case API.request(method, auth, endpoint, options) do
+    headers = headers ++ auth
+    case API.request(method, url, body, headers, options) do
       {:ok, %HTTPoison.Response{body: body}} -> {:reply, {:ok, body}, client}
       {:ok, response} -> {:reply, {:ok, response}, client}
       {:error, error} -> {:reply, {:error, error}, client}
@@ -77,8 +77,8 @@ defmodule YelpElixir.Client.Base do
         YelpElixir.Client.Base.start_link(options ++ [name: __MODULE__])
       end
 
-      defp get(endpoint, options \\ []) do
-        YelpElixir.Client.Base.get_call(__MODULE__, endpoint, options)
+      defp get(url, headers \\ [], options \\ []) do
+        YelpElixir.Client.Base.get_call(__MODULE__, url, headers, options)
       end
 
       #defp get!(url, headers \\ [], options \\ []) do

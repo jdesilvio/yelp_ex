@@ -16,18 +16,18 @@ defmodule YelpElixir.Client do
   *Note:* A location option is mandatory. Either by passing
   the `location` or `latitude` and `longitude`.
   """
-  @spec search(%OAuth2.Client{}, Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
-  def search(client, options) do
-    endpoint = "businesses/search"
-    get(endpoint, options)
+  @spec search(Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
+  def search(options) do
+    url = "businesses/search"
+    get(url, [], options)
   end
 
   @doc """
   Same as `search/2` but raises `HTTPoison.error` if an error occurs.
   """
-  @spec search!(%OAuth2.Client{}, Keyword.t) :: %{}
-  def search!(client, options) do
-    search(client, options)
+  @spec search!(Keyword.t) :: %{}
+  def search!(options) do
+    search(options)
   end
 
 end
