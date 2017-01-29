@@ -18,8 +18,7 @@ defmodule YelpElixir.Client do
   """
   @spec search(Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
   def search(options) do
-    url = "businesses/search"
-    get(url, [], options)
+    get("businesses/search", [], options)
   end
 
   @doc """
@@ -27,7 +26,7 @@ defmodule YelpElixir.Client do
   """
   @spec search!(Keyword.t) :: %{}
   def search!(options) do
-    search(options)
+    get!("businesses/search", [], options)
   end
 
 end
