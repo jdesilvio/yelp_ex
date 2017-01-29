@@ -59,14 +59,16 @@ defmodule YelpElixir.API do
   """
   @spec get_token(OAuth2.Client.t, Keyword.t) :: {:ok, OAuth2.Client.t} | {:error, HTTPoison.Error.t}
   def get_token(client \\ @client, options \\ []) do
-    OAuth2.Client.get_token(
-      client,
-      params = [
-        grant_type: "client_credentials",
-        client_id: client.client_id,
-        client_secret: client.client_secret
-      ]
-    )
+    params = [
+      grant_type: "client_credentials",
+      client_id: client.client_id,
+      client_secret: client.client_secret
+    ]
+
+    case OAuth2.Client.get_token(client, params) do
+      {:ok, response} -> {:ok, response.token}
+      {:error, error} -> {:error, error}
+    end
   end
 
   @doc """
@@ -91,7 +93,7 @@ defmodule YelpElixir.API do
   @doc """
   Perform an HTTP request.
   """
-  #@spec request(atom, Keyword.t, String.t, Keyword.t) :: {:ok, OAuth2.Response.t} | {:error, HTTPoison.Error.t}
+  @spec request(atom, String.t, body, headers, Keyword.t) :: {:ok, OAuth2.Response.t} | {:error, HTTPoison.Error.t}
   def request(method, url, body \\ "", headers \\ [], options \\ []) do
     url = @base_url <> url <> "?"
 
@@ -104,9 +106,9 @@ defmodule YelpElixir.API do
   @doc """
   Same as `request/3` but returns `OAuth2.Response` or raises an error.
   """
-  #@spec request!(atom, Keyword.t, String.t, Keyword.t) :: OAuth2.Response.t
-  def request!(method, headers, endpoint, options) do
-    case request(method, headers, endpoint, options) do
+  @spec request!(atom, String.t, body, headers, Keyword.t) :: OAuth2.Response.t
+  def request!(method, url, body \\ "", headers \\ [], options \\ []) do
+    case request(method, url, body, headers, options) do
       {:ok, response} -> response
       {:error, error} -> raise error
     end

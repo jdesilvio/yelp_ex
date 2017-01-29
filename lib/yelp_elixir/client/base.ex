@@ -52,13 +52,13 @@ defmodule YelpElixir.Client.Base do
     end
   end
 
-  def handle_call({method, url, body, headers, options}, _from, client) do
-    auth = [auth: "#{client.token.token_type} #{client.token.access_token}"]
+  def handle_call({method, url, body, headers, options}, _from, token) do
+    auth = [auth: "#{token.token_type} #{token.access_token}"]
     headers = headers ++ auth
     case API.request(method, url, body, headers, options) do
-      {:ok, %HTTPoison.Response{body: body}} -> {:reply, {:ok, body}, client}
-      {:ok, response} -> {:reply, {:ok, response}, client}
-      {:error, error} -> {:reply, {:error, error}, client}
+      {:ok, %HTTPoison.Response{body: body}} -> {:reply, {:ok, body}, token}
+      {:ok, response} -> {:reply, {:ok, response}, token}
+      {:error, error} -> {:reply, {:error, error}, token}
     end
   end
 
