@@ -20,7 +20,7 @@ defmodule YelpElixir.Client.Base do
   """
   @spec start_link(Keyword.t) :: GenServer.on_start
   def start_link(options \\ []) do
-    GenServer.start_link(__MODULE__, nil, [name: __MODULE__])
+    GenServer.start_link(__MODULE__, nil, options)
   end
 
   @doc """
@@ -44,9 +44,9 @@ defmodule YelpElixir.Client.Base do
     end
   end
 
-  def get_call(endpoint, options \\ []) do
+  def get_call(pid, endpoint, options \\ []) do
     headers = ""
-    GenServer.call(__MODULE__, {:get, headers, endpoint, options})
+    GenServer.call(pid, {:get, headers, endpoint, options})
   end
 
   ## Server callbacks
@@ -64,6 +64,26 @@ defmodule YelpElixir.Client.Base do
       {:ok, %HTTPoison.Response{body: body}} -> {:reply, {:ok, body}, client}
       {:ok, response} -> {:reply, {:ok, response}, client}
       {:error, error} -> {:reply, {:error, error}, client}
+    end
+  end
+
+  @doc """
+  Generates a *singleton* Twitter client.
+  """
+  defmacro __using__(_) do
+    quote do
+      @doc false
+      def start_link(options \\ []) do
+        YelpElixir.Client.Base.start_link(options ++ [name: __MODULE__])
+      end
+
+      defp get(endpoint, options \\ []) do
+        YelpElixir.Client.Base.get_call(__MODULE__, endpoint, options)
+      end
+
+      #defp get!(url, headers \\ [], options \\ []) do
+        #  YelpElixir.Client.Base.get_call!(__MODULE__, url, headers, options)
+        #end
     end
   end
 

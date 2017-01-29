@@ -3,7 +3,7 @@ defmodule YelpElixir.Client do
   Client to interact with the Yelp API.
   """
 
-  alias YelpElixir.Client.Base
+  use YelpElixir.Client.Base
 
   @doc """
   Issues a GET request to the /businesses/search endpoint.
@@ -19,7 +19,7 @@ defmodule YelpElixir.Client do
   @spec search(%OAuth2.Client{}, Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
   def search(client, options) do
     endpoint = "businesses/search"
-    Base.get(client, endpoint, options)
+    get(endpoint, options)
   end
 
   @doc """

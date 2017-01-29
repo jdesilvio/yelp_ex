@@ -7,7 +7,7 @@ defmodule YelpElixir do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(YelpElixir.Client.Base, [])
+      worker(YelpElixir.Client, [])
     ]
 
     opts = [strategy: :one_for_one, name: YelpElixir.Supervisor]
