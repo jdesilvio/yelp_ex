@@ -44,22 +44,27 @@ defmodule YelpElixir.Client.Base do
     end
   end
 
+  def get_call(endpoint, options \\ []) do
+    headers = ""
+    GenServer.call(__MODULE__, {:get, headers, endpoint, options})
+  end
 
   ## Server callbacks
 
   def init(nil) do
     case API.get_token do
-      {:ok, token} -> {:ok, token}
+      {:ok, client} -> {:ok, client}
       {:error, error} -> {:stop, error.reason}
     end
   end
 
-  #  def handle_call({method, url, body, headers, options}, _from, token) do
-  #    case API.request(method, url, body, headers, [{:auth, token} | options]) do
-  #      {:ok, %HTTPoison.Response{body: body}} -> {:reply, {:ok, body}, token}
-  #      {:ok, response} -> {:reply, {:ok, response}, token}
-  #      {:error, error} -> {:reply, {:error, error}, token}
-  #    end
-  #  end
+  def handle_call({method, headers, endpoint, options}, _from, client) do
+    auth = [auth: "#{client.token.token_type} #{client.token.access_token}"]
+    case API.request(method, auth, endpoint, options) do
+      {:ok, %HTTPoison.Response{body: body}} -> {:reply, {:ok, body}, client}
+      {:ok, response} -> {:reply, {:ok, response}, client}
+      {:error, error} -> {:reply, {:error, error}, client}
+    end
+  end
 
 end
