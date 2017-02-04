@@ -1,4 +1,4 @@
-defmodule YelpElixir.Client.Base do
+defmodule YelpEx.Client.Base do
   @moduledoc """
   Client implementation module.
 
@@ -8,9 +8,9 @@ defmodule YelpElixir.Client.Base do
   ## Example:
 
       ```
-      defmodule YelpElixir.SuperAwesomeClient do
+      defmodule YelpEx.SuperAwesomeClient do
 
-        use YelpElixir.Client.Base
+        use YelpEx.Client.Base
 
         @spec search(Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
         def search(options) do
@@ -27,7 +27,7 @@ defmodule YelpElixir.Client.Base do
 
   """
 
-  alias YelpElixir.API
+  alias YelpEx.API
 
   use GenServer
 
@@ -88,15 +88,15 @@ defmodule YelpElixir.Client.Base do
     quote do
       @doc false
       def start_link(options \\ []) do
-        YelpElixir.Client.Base.start_link(options ++ [name: __MODULE__])
+        YelpEx.Client.Base.start_link(options ++ [name: __MODULE__])
       end
 
       defp get(endpoint, headers \\ [], options \\ []) do
-        YelpElixir.Client.Base.get(__MODULE__, endpoint, headers, options)
+        YelpEx.Client.Base.get(__MODULE__, endpoint, headers, options)
       end
 
       defp get!(endpoint, headers \\ [], options \\ []) do
-        YelpElixir.Client.Base.get!(__MODULE__, endpoint, headers, options)
+        YelpEx.Client.Base.get!(__MODULE__, endpoint, headers, options)
       end
     end
   end

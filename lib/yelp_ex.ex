@@ -1,4 +1,4 @@
-defmodule YelpElixir do
+defmodule YelpEx do
   @moduledoc false
 
   use Application
@@ -7,10 +7,10 @@ defmodule YelpElixir do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(YelpElixir.Client, [])
+      worker(YelpEx.Client, [])
     ]
 
-    opts = [strategy: :one_for_one, name: YelpElixir.Supervisor]
+    opts = [strategy: :one_for_one, name: YelpEx.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end

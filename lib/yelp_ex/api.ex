@@ -1,4 +1,4 @@
-defmodule YelpElixir.API do
+defmodule YelpEx.API do
   @moduledoc """
   Provides functionality to interact with the Yelp API.
 

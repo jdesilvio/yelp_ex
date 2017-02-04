@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :yelp_elixir, key: :value
+#     config :yelp_ex, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:yelp_elixir, :key)
+#     Application.get_env(:yelp_ex, :key)
 #
 # Or configure a 3rd-party app:
 #

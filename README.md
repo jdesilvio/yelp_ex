@@ -1,4 +1,4 @@
-# YelpElixir
+# YelpEx
 
 An Elixir wrapper for the Yelp API v3.
 
@@ -14,21 +14,21 @@ Yelp uses OAuth2.0 to authenticate using the *client credentials* grant type.
 
 ## Installation
 
-Add `YelpElixir` to your `mix.exs` file as a dependency:
+Add `YelpEx` to your `mix.exs` file as a dependency:
 
 ```elixir
 defp deps do
-  [{:yelp_elixir, github: "jdesilvio/yelp-elixir"}]
+  [{:yelp_ex, github: "jdesilvio/YelpEx"}]
 end
 ```
 
 Now, run: `mix do deps.get, compile`
 
-Then, add `:yelp_elixir` to your `extra_applications` list in `mix.exs`:
+Then, add `:yelp_ex` to your `extra_applications` list in `mix.exs`:
 
 ```elixir
 def application do
-  [extra_applications: [:logger, :yelp_elixir]]
+  [extra_applications: [:logger, :yelp_ex]]
 end
 ```
 
@@ -47,7 +47,7 @@ Execute the file from the command line:
 $ source .env
 ```
 
-_**When you start your app, an authenticated, supervised `YelpElixir.Client` will also be started.**_
+_**When you start your app, an authenticated, supervised `YelpEx.Client` will also be started.**_
 
 
 ## Usage
@@ -59,9 +59,9 @@ _Click endpoint links to see all valid parameters that can be passed in `options
 iex> options = [params: [sort_by: "distance", longitude: -75.145101, latitude: 39.54364]]
 [params: [sort_by: "distance", longitude: -75.145101, latitude: 39.54364]]
 
-iex> YelpElixir.Client.search(options)
+iex> YelpEx.Client.search(options)
 {:ok, %{...your results...}}
 
-iex> YelpElixir.Client.search!(options)
+iex> YelpEx.Client.search!(options)
 %{...your results...}
 ```

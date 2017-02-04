@@ -1,9 +1,9 @@
-defmodule YelpElixir.Client do
+defmodule YelpEx.Client do
   @moduledoc """
   Client to interact with the Yelp API.
   """
 
-  use YelpElixir.Client.Base
+  use YelpEx.Client.Base
 
   @doc """
   Issues a GET request to the /businesses/search endpoint.
@@ -19,11 +19,11 @@ defmodule YelpElixir.Client do
   ## Examples:
 
       iex> options = [params: [location: "Philadelphia, PA 19106"]]
-      iex> YelpElixir.Client.search(options)
+      iex> YelpEx.Client.search(options)
       {:ok, {<RESPONSE>}}
 
       iex> options = [params: [longitude: -75.145101, latitude: 39.54364]]
-      iex> YelpElixir.Client.search!(options)
+      iex> YelpEx.Client.search!(options)
       {<RESPONSE>}
 
   """

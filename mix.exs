@@ -1,8 +1,8 @@
-defmodule YelpElixir.Mixfile do
+defmodule YelpEx.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :yelp_elixir,
+    [app: :yelp_ex,
      version: "0.1.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
@@ -12,7 +12,7 @@ defmodule YelpElixir.Mixfile do
 
   def application do
     [applications: [:logger, :oauth2, :httpoison],
-    mod: {YelpElixir, []}]
+    mod: {YelpEx, []}]
   end
 
   defp deps do
