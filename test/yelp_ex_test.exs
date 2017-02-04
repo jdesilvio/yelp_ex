@@ -1,6 +1,6 @@
-defmodule YelpElixirTest do
+defmodule YelpExTest do
   use ExUnit.Case
-  doctest YelpElixir
+  doctest YelpEx
 
   test "the truth" do
     assert 1 + 1 == 2

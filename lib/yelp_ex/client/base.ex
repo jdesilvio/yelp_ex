@@ -1,4 +1,4 @@
-defmodule YelpElixir.Client.Base do
+defmodule YelpEx.Client.Base do
   @moduledoc """
   Client implementation module.
 
@@ -7,27 +7,27 @@ defmodule YelpElixir.Client.Base do
 
   ## Example:
 
-      ```
-      defmodule YelpElixir.SuperAwesomeClient do
+  ```
+  defmodule YelpEx.SuperAwesomeClient do
 
-        use YelpElixir.Client.Base
+    use YelpEx.Client.Base
 
-        @spec search(Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
-        def search(options) do
-          get("businesses/search", [], options)
-        end
+    @spec search(Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
+    def search(options) do
+      get("businesses/search", [], options)
+    end
 
-        @spec search!(Keyword.t) :: %{}
-        def search!(options) do
-          get!("businesses/search", [], options)
-        end
+    @spec search!(Keyword.t) :: %{}
+    def search!(options) do
+      get!("businesses/search", [], options)
+    end
 
-      end
-      ```
+  end
+  ```
 
   """
 
-  alias YelpElixir.API
+  alias YelpEx.API
 
   use GenServer
 
@@ -44,15 +44,15 @@ defmodule YelpElixir.Client.Base do
   @doc """
   Issues a GET request.
   """
-  @spec get(pid, String.t, API.headers, Keyword.t) :: {:ok,  OAuth2.Response.t} | {:error, HTTPoison.Error.t}
+  @spec get(pid, String.t, API.headers, Keyword.t) :: {:ok,  HTTPoison.Response.t} | {:error, HTTPoison.Error.t}
   def get(pid, endpoint, headers, options \\ []) do
     GenServer.call(pid, {:get, endpoint, "", headers, options})
   end
 
   @doc """
-  Same as `get` but raises `HTTPoison.error` if an error occurs.
+  Same as `get/4` but raises `HTTPoison.Error` if an error occurs.
   """
-  @spec get(pid, String.t, API.headers, Keyword.t) :: OAuth2.Response.t
+  @spec get!(pid, String.t, API.headers, Keyword.t) :: HTTPoison.Response.t
   def get!(pid, endpoint, headers, options \\ []) do
     case get(pid, endpoint, headers, options) do
       {:ok, response} -> response
@@ -88,15 +88,15 @@ defmodule YelpElixir.Client.Base do
     quote do
       @doc false
       def start_link(options \\ []) do
-        YelpElixir.Client.Base.start_link(options ++ [name: __MODULE__])
+        YelpEx.Client.Base.start_link(options ++ [name: __MODULE__])
       end
 
       defp get(endpoint, headers \\ [], options \\ []) do
-        YelpElixir.Client.Base.get(__MODULE__, endpoint, headers, options)
+        YelpEx.Client.Base.get(__MODULE__, endpoint, headers, options)
       end
 
       defp get!(endpoint, headers \\ [], options \\ []) do
-        YelpElixir.Client.Base.get!(__MODULE__, endpoint, headers, options)
+        YelpEx.Client.Base.get!(__MODULE__, endpoint, headers, options)
       end
     end
   end
