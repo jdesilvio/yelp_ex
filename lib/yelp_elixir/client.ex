@@ -3,27 +3,7 @@ defmodule YelpElixir.Client do
   Client to interact with the Yelp API.
   """
 
-  @doc """
-  Issues a GET request.
-  """
-  @spec get(%OAuth2.Client{}, String.t, Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
-  def get(client, url, options \\ []) do
-    query = url <> URI.encode_query(options)
-    header = ["Authorization": "#{client.token.token_type} #{client.token.access_token}"]
-
-    HTTPoison.get(query, header)
-  end
-
-  @doc """
-  Same as get/3 but raises `HTTPoison.error` if an error occurs.
-  """
-  @spec get!(%OAuth2.Client{}, String.t, Keyword.t) :: %{}
-  def get!(client, url, params) do
-    case get(client, url, params) do
-      {:ok, response} -> response
-      {:error, error} -> raise error
-    end
-  end
+  use YelpElixir.Client.Base
 
   @doc """
   Issues a GET request to the /businesses/search endpoint.
@@ -35,19 +15,29 @@ defmodule YelpElixir.Client do
 
   *Note:* A location option is mandatory. Either by passing
   the `location` or `latitude` and `longitude`.
+
+  ## Examples:
+
+      iex> options = [params: [location: "Philadelphia, PA 19106"]]
+      iex> YelpElixir.Client.search(options)
+      {:ok, {<RESPONSE>}}
+
+      iex> options = [params: [longitude: -75.145101, latitude: 39.54364]]
+      iex> YelpElixir.Client.search!(options)
+      {<RESPONSE>}
+
   """
-  @spec search(%OAuth2.Client{}, Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
-  def search(client, options \\ []) do
-    url = "https://api.yelp.com/v3/businesses/search?"
-    get(client, url, options)
+  @spec search(Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
+  def search(options) do
+    get("businesses/search", [], options)
   end
 
   @doc """
-  Same as search/2 but raises `HTTPoison.error` if an error occurs.
+  Same as `search/2` but raises `HTTPoison.error` if an error occurs.
   """
-  @spec search!(%OAuth2.Client{}, Keyword.t) :: %{}
-  def search!(client, options \\ []) do
-    search(client, options)
+  @spec search!(Keyword.t) :: %{}
+  def search!(options) do
+    get!("businesses/search", [], options)
   end
 
 end
