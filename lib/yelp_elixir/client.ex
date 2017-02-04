@@ -15,6 +15,17 @@ defmodule YelpElixir.Client do
 
   *Note:* A location option is mandatory. Either by passing
   the `location` or `latitude` and `longitude`.
+
+  ## Examples:
+
+      iex> options = [params: [location: "Philadelphia, PA 19106"]]
+      iex> YelpElixir.Client.search(options)
+      {:ok, {<RESPONSE>}}
+
+      iex> options = [params: [longitude: -75.145101, latitude: 39.54364]]
+      iex> YelpElixir.Client.search!(options)
+      {<RESPONSE>}
+
   """
   @spec search(Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
   def search(options) do

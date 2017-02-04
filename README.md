@@ -4,7 +4,7 @@ An Elixir wrapper for the Yelp API v3.
 
 See the Yelp API [docs](https://www.yelp.com/developers/documentation/v3/).
 
-## Authentication
+## Yelp Setup
 
 First, you need to create an app on [Yelp's developer website](https://www.yelp.com/developers/v3/manage_app). After you do this you will get an "App ID" and an "App Secret".
 
@@ -13,9 +13,11 @@ Yelp uses OAuth2.0 to authenticate using the *client credentials* grant type. Go
 * `Client ID` to mean `App ID`
 * `Client Secret` to mean `App Secret`
 
+## Authentication
+
 ### There are currently 2 ways to authenticate:
 
-**Environment variables:**
+**Use environment variables:**
 
 Place a file `.env` in your project root with the following:
 
@@ -28,14 +30,14 @@ Execute the file from the command line:
 $ source .env
 ```
 
-Create a client in `IEx`:
+Get your access token in `IEx`:
 
 ```bash
 $ iex -S mix
 ```
 ```elixir
-iex> client = YelpElixir.API.get_token!
-%OAuth2.Client{}
+iex> token = YelpElixir.API.get_token!
+%OAuth2.AccessToken{}
 ```
 
 **Supply your credentials in `IEx`:**
@@ -47,8 +49,8 @@ $ iex -S mix
 iex> client = YelpElixir.API.create_client(client_id="<YOUR_CLIENT_ID>", client_secret="<YOUR_CLIENT_SECRET>")
 %OAuth2.Client{}
 
-iex> client = YelpElixir.API.get_token!(client)
-%OAuth2.Client{}
+iex> token = YelpElixir.API.get_token!(client)
+%OAuth2.AccessToken{}
 ```
 
 ## Usage

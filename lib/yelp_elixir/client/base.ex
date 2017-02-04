@@ -2,11 +2,29 @@ defmodule YelpElixir.Client.Base do
   @moduledoc """
   Client implementation module.
 
+  The components in this module can be
+  used to build a custom Yelp API client.
+
   ## Example:
 
-      client = YelpElixir.API.get_token!
-      options = [params: [sort_by: "distance", longitude: -75.145101, latitude: 39.54364]]
-      YelpElixir.Client.Base.get(client, "businesses/search", options)
+      ```
+      defmodule YelpElixir.SuperAwesomeClient do
+
+        use YelpElixir.Client.Base
+
+        @spec search(Keyword.t) :: {:ok, %{}} | {:error, HTTPoison.Error.t}
+        def search(options) do
+          get("businesses/search", [], options)
+        end
+
+        @spec search!(Keyword.t) :: %{}
+        def search!(options) do
+          get!("businesses/search", [], options)
+        end
+
+      end
+      ```
+
   """
 
   alias YelpElixir.API
@@ -27,16 +45,16 @@ defmodule YelpElixir.Client.Base do
   Issues a GET request.
   """
   @spec get(pid, String.t, API.headers, Keyword.t) :: {:ok,  OAuth2.Response.t} | {:error, HTTPoison.Error.t}
-  def get(pid, url, headers \\ [], options \\ []) do
-    GenServer.call(pid, {:get, url, "", headers, options})
+  def get(pid, endpoint, headers, options \\ []) do
+    GenServer.call(pid, {:get, endpoint, "", headers, options})
   end
 
   @doc """
-  Same as `get/3` but raises `HTTPoison.error` if an error occurs.
+  Same as `get` but raises `HTTPoison.error` if an error occurs.
   """
   @spec get(pid, String.t, API.headers, Keyword.t) :: OAuth2.Response.t
-  def get!(pid, url, headers \\ [], options \\ []) do
-    case get(pid, url, headers, options) do
+  def get!(pid, endpoint, headers, options \\ []) do
+    case get(pid, endpoint, headers, options) do
       {:ok, response} -> response
       {:error, error} -> raise error
     end
@@ -47,15 +65,16 @@ defmodule YelpElixir.Client.Base do
 
   def init(nil) do
     case API.get_token do
-      {:ok, client} -> {:ok, client}
+      {:ok, token} -> {:ok, token}
       {:error, error} -> {:stop, error.reason}
     end
   end
 
-  def handle_call({method, url, body, headers, options}, _from, token) do
-    auth = [auth: "#{token.token_type} #{token.access_token}"]
+  def handle_call({method, endpoint, body, headers, options}, _from, token) do
+    auth = ["Authorization": "#{token.token_type} #{token.access_token}"]
     headers = headers ++ auth
-    case API.request(method, url, body, headers, options) do
+
+    case API.request(method, endpoint, body, headers, options) do
       {:ok, %HTTPoison.Response{body: body}} -> {:reply, {:ok, body}, token}
       {:ok, response} -> {:reply, {:ok, response}, token}
       {:error, error} -> {:reply, {:error, error}, token}
@@ -72,12 +91,12 @@ defmodule YelpElixir.Client.Base do
         YelpElixir.Client.Base.start_link(options ++ [name: __MODULE__])
       end
 
-      defp get(url, headers \\ [], options \\ []) do
-        YelpElixir.Client.Base.get(__MODULE__, url, headers, options)
+      defp get(endpoint, headers \\ [], options \\ []) do
+        YelpElixir.Client.Base.get(__MODULE__, endpoint, headers, options)
       end
 
-      defp get!(url, headers \\ [], options \\ []) do
-        YelpElixir.Client.Base.get!(__MODULE__, url, headers, options)
+      defp get!(endpoint, headers \\ [], options \\ []) do
+        YelpElixir.Client.Base.get!(__MODULE__, endpoint, headers, options)
       end
     end
   end

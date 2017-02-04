@@ -2,24 +2,13 @@ defmodule YelpElixir.API do
   @moduledoc """
   Provides functionality to interact with the Yelp API.
 
-  https://api.yelp.com
-
-  ### Examples
-
-  ```
-  # Using envrironment variables
-  client = YelpElixir.API.get_token!
-
-  # Creating your own client
-  client = YelpElixir.API.create_client(client_id="abc", client_secret="z123")
-  client = YelpElixir.API.get_token!(client)
-  ```
+  https://www.yelp.com/developers/documentation/v3
   """
 
   use HTTPoison.Base
   alias OAuth2
 
-  @base_url "https://api.yelp.com/v3/"
+  @api_url "https://api.yelp.com/v3/"
 
   @client OAuth2.Client.new([
       strategy: OAuth2.Strategy.ClientCredentials,
@@ -45,7 +34,7 @@ defmodule YelpElixir.API do
   end
 
   @doc """
-  Gets the Yelp API access token.
+  Get a Yelp API access token.
 
   `get_token/0` uses the default @client
   that was created using environment variables.
@@ -54,8 +43,7 @@ defmodule YelpElixir.API do
   struct as an input. This should be created
   by using `create_client/2`.
 
-  Returns new %OAuth2.Client{} with the
-  `AccessToken` key added.
+  Returns %OAuth2.AccessToken{}.
   """
   @spec get_token(OAuth2.Client.t, Keyword.t) :: {:ok, OAuth2.Client.t} | {:error, HTTPoison.Error.t}
   def get_token(client \\ @client, options \\ []) do
@@ -72,8 +60,8 @@ defmodule YelpElixir.API do
   end
 
   @doc """
-  Same as `get_token` but raises `HTTPoison.Error` if an error occurs during the
-  request.
+  Same as `get_token`, but raises `HTTPoison.Error`
+  if an error occurs during the request.
   """
   @spec get_token!(OAuth2.Client.t, Keyword.t) :: OAuth2.Client.t
   def get_token!(client \\ @client, options \\ []) do
@@ -84,7 +72,7 @@ defmodule YelpElixir.API do
   end
 
   @doc """
-  Refreshes the Yelp API access token.
+  Refreshes a Yelp API access token.
   """
   def refresh_token do
     :not_implemented
@@ -94,17 +82,14 @@ defmodule YelpElixir.API do
   Perform an HTTP request.
   """
   @spec request(atom, String.t, body, headers, Keyword.t) :: {:ok, OAuth2.Response.t} | {:error, HTTPoison.Error.t}
-  def request(method, url, body \\ "", headers \\ [], options \\ []) do
-    url = @base_url <> url <> "?"
+  def request(method, endpoint, body \\ "", headers, options \\ []) do
+    url = @api_url <> endpoint <> "?"
 
-    {auth, headers} = Keyword.pop(headers, :auth)
-    auth_header = ["Authorization": auth]
-
-    super(method, url, "", auth_header, options)
+    super(method, url, "", headers, options)
   end
 
   @doc """
-  Same as `request/3` but returns `OAuth2.Response` or raises an error.
+  Same as `request/5`, but returns `OAuth2.Response` or raises an error.
   """
   @spec request!(atom, String.t, body, headers, Keyword.t) :: OAuth2.Response.t
   def request!(method, url, body \\ "", headers \\ [], options \\ []) do
