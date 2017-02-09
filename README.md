@@ -4,6 +4,8 @@ An Elixir client for the Yelp Fusion API (aka *Yelp's API v3*).
 
 See the Yelp API docs [here](https://www.yelp.com/developers/documentation/v3/).
 
+See the [Hex documentation](https://hex.pm/packages/yelp_ex) for more information.
+
 
 ## Installation
 
@@ -15,7 +17,7 @@ def application do
 end
 
 defp deps do
-  [{:yelp_ex, github: "jdesilvio/yelp_ex"}]
+  [{:yelp_ex, "~> 0.1.1"}]
 end
 ```
 
