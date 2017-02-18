@@ -81,7 +81,7 @@ defmodule YelpEx.API do
   """
   @spec request(atom, String.t, body, headers, Keyword.t) :: {:ok, HTTPoison.Response.t} | {:error, HTTPoison.Error.t}
   def request(method, endpoint, body \\ "", headers, options \\ []) do
-    url = @api_url <> endpoint <> "?"
+    url = @api_url <> endpoint
 
     super(method, url, "", headers, options)
   end
