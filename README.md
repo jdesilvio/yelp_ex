@@ -20,7 +20,7 @@ def application do
 end
 
 defp deps do
-  [{:yelp_ex, "~> 0.1.1"}]
+  [{:yelp_ex, "~> 0.1.3"}]
 end
 ```
 
