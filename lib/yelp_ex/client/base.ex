@@ -64,20 +64,20 @@ defmodule YelpEx.Client.Base do
   ## Server callbacks
 
   def init(nil) do
-    case API.get_token do
-      {:ok, token} -> {:ok, token}
-      {:error, error} -> {:stop, error.reason}
+    case System.get_env("YELP_API_KEY") do
+      nil -> {:stop, "YELP_API_KEY environment variable must be set"}
+      api_key -> {:ok, api_key}
     end
   end
 
-  def handle_call({method, endpoint, body, headers, options}, _from, token) do
-    auth = ["Authorization": "#{token.token_type} #{token.access_token}"]
+  def handle_call({method, endpoint, body, headers, options}, _from, api_key) do
+    auth = ["Authorization": "Bearer #{api_key}"]
     headers = headers ++ auth
 
     case API.request(method, endpoint, body, headers, options) do
-      {:ok, %HTTPoison.Response{body: body}} -> {:reply, {:ok, body}, token}
-      {:ok, response} -> {:reply, {:ok, response}, token}
-      {:error, error} -> {:reply, {:error, error}, token}
+      {:ok, %HTTPoison.Response{body: body}} -> {:reply, {:ok, body}, api_key}
+      {:ok, response} -> {:reply, {:ok, response}, api_key}
+      {:error, error} -> {:reply, {:error, error}, api_key}
     end
   end
 
