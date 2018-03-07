@@ -20,9 +20,12 @@ def application do
 end
 
 defp deps do
-  [{:yelp_ex, "~> 0.1.3"}]
+  [{:yelp_ex, "~> 0.2.0"}]
 end
 ```
+
+*Important:* You must use `YelpEx` version 0.2.0 or higher due
+to a change in how the Yelp Fusion API authenticates.
 
 Then, run: `mix do deps.get, compile`
 
