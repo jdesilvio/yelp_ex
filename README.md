@@ -33,18 +33,16 @@ In order to use `YelpEx`, you need to create an application on
 [Yelp's developer website](https://www.yelp.com/developers/v3/manage_app).
 After you do this, you will get an "App ID" and an "App Secret".
 
-Yelp uses `OAuth2.0` to authenticate using the *client credentials*
-grant type.
+Yelp uses an *API key* to authenticate.
 
 Before starting your application, you will need to save your
-Yelp API credentials as **environment variables**...
+Yelp API key as an **environment variable**...
 
-Place a file called `.env` in your project root with the
-following:
+One way to do this is to create a file called `.env` in your
+project root with the following:
 
 ```bash
-export CLIENT_ID="<YOUR_YELP_APP_ID>"
-export CLIENT_SECRET="<YOUR_YELP_APP_SECRET>"
+export YELP_API_KEY="<YOUR_YELP_API_KEY>"
 ```
 
 Execute the file from the command line:
@@ -89,4 +87,3 @@ iex> YelpEx.Client.search_phone(options)
 iex> YelpEx.Client.search_phone!(options)
 {<RESPONSE>}
 ```
-
